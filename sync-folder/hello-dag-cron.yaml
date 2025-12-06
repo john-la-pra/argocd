@@ -19,13 +19,13 @@ spec:
               template: print-hello
             - name: world
               template: print-world
-              depends: hello
+              dependencies: ["hello"]
             - name: goodbye
               template: print-goodbye
-              depends: hello
+              dependencies: ["hello"]
             - name: wait
               template: wait
-              depends: [world, goodbye]
+              dependencies: ["world", "goodbye"]
 
       - name: print-hello
         container:
