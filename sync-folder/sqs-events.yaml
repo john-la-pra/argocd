@@ -6,9 +6,8 @@ metadata:
 spec:
   sqs:
     myqueue:
-      region: us-west-2                  # replace
-      # queue: "https://sqs.us-west-2.amazonaws.com/654654598303/dat-argo-wf-hello-pr-12-events"  # replace
-      queueName: dat-argo-wf-hello-pr-12-events
+      region: us-west-2
+      queue: "https://sqs.us-west-2.amazonaws.com/654654598303/dat-argo-wf-hello-pr-12-events"
       waitTimeSeconds: 5
       accessKey:
         key: AWS_ACCESS_KEY_ID

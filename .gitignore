@@ -1,2 +1,3 @@
 # .gitignore
 argoevent/aws-sso-secret.yaml
+secret
