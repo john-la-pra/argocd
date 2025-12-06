@@ -4,8 +4,8 @@ metadata:
   name: hello-dag-cron
   namespace: default
 spec:
-  schedule: "* * * * *"  # every 2 minutes
-  concurrencyPolicy: "Allow"
+  schedule: "* * * * *"
+  concurrencyPolicy: "Forbid"   # avoid overlap
   startingDeadlineSeconds: 60
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
@@ -23,27 +23,30 @@ spec:
             - name: goodbye
               template: print-goodbye
               depends: hello
+            - name: wait
+              template: wait
+              depends: [world, goodbye]
 
       - name: print-hello
         container:
           image: busybox
           command: ["/bin/sh", "-c"]
-          args:
-            - echo "hello $(date -u +'%Y-%m-%dT%H:%M:%SZ')"; sleep 10
-          restartPolicy: Never
+          args: ["echo hello $(date -u +'%Y-%m-%dT%H:%M:%SZ')"]
 
       - name: print-world
         container:
           image: busybox
           command: ["/bin/sh", "-c"]
-          args:
-            - echo "world $(date -u +'%Y-%m-%dT%H:%M:%SZ')"; sleep 10
-          restartPolicy: Never
+          args: ["echo world $(date -u +'%Y-%m-%dT%H:%M:%SZ')"]
 
       - name: print-goodbye
         container:
           image: busybox
           command: ["/bin/sh", "-c"]
-          args:
-            - echo "goodbye $(date -u +'%Y-%m-%dT%H:%M:%SZ')"; sleep 15
-          restartPolicy: Never
+          args: ["echo goodbye $(date -u +'%Y-%m-%dT%H:%M:%SZ')"]
+
+      - name: wait
+        container:
+          image: busybox
+          command: ["/bin/sh", "-c"]
+          args: ["sleep 30"]
