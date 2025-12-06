@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
   name: sqs-sensor
-  namespace: argo-events
+  namespace: argocd
 spec:
   dependencies:
     - name: sqs-event
