@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: sqs-es
+  namespace: argocd
+spec:
+  sqs:
+    myqueue:
+      region: "us-west-2"                     # replace
+      queue: "https://sqs.us-west-2.amazonaws.com/654654598303/dat-argo-wf-hello-pr-12-events"  # replace
+      waitTimeSeconds: 5
+      accessKey:
+        key: AWS_ACCESS_KEY_ID
+        name: aws-sso-creds
+      secretKey:
+        key: AWS_SECRET_ACCESS_KEY
+        name: aws-sso-creds
+      sessionToken:
+        key: AWS_SESSION_TOKEN
+        name: aws-sso-creds
+      jsonBody: true
+      deleteMessage: true
+      visibilityTimeoutSeconds: 30
