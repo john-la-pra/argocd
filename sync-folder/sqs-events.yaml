@@ -9,15 +9,22 @@ spec:
       region: us-west-2
       queue: "https://sq.us-west-2.amazonaws.com/654654598303/dat-argo-wf-hello-pr-12-events"
       waitTimeSeconds: 5
-      accessKey:
-        key: AWS_ACCESS_KEY_ID
-        name: aws-sso-creds
-      secretKey:
-        key: AWS_SECRET_ACCESS_KEY
-        name: aws-sso-creds
-      sessionToken:
-        key: AWS_SESSION_TOKEN
-        name: aws-sso-creds
+      env:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: aws-sso-creds
+            key: AWS_ACCESS_KEY_ID
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: aws-sso-creds
+            key: AWS_SECRET_ACCESS_KEY
+      - name: AWS_SESSION_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: aws-sso-creds
+            key: AWS_SESSION_TOKEN
       jsonBody: true
       deleteMessage: true
       visibilityTimeoutSeconds: 30
