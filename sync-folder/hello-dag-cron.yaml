@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: hello-dag-cron
+  namespace: default
+spec:
+  schedule: "*/2 * * * *"  # every 2 minutes
+  concurrencyPolicy: "Allow"
+  startingDeadlineSeconds: 10
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  workflowSpec:
+    entrypoint: hello-dag
+    templates:
+      - name: hello-dag
+        dag:
+          tasks:
+            - name: hello
+              template: print-hello
+            - name: world
+              template: print-world
+              dependencies: [hello]
+            - name: goodbye
+              template: print-goodbye
+              dependencies: [hello]
+
+      - name: print-hello
+        container:
+          image: busybox
+          command: ["/bin/sh", "-c"]
+          args:
+            - echo "hello $(date -u +'%Y-%m-%dT%H:%M:%SZ')"; sleep 30
+
+      - name: print-world
+        container:
+          image: busybox
+          command: ["/bin/sh", "-c"]
+          args:
+            - echo "world $(date -u +'%Y-%m-%dT%H:%M:%SZ')"; sleep 30
+
+      - name: print-goodbye
+        container:
+          image: busybox
+          command: ["/bin/sh", "-c"]
+          args:
+            - echo "goodbye $(date -u +'%Y-%m-%dT%H:%M:%SZ')"; sleep 30

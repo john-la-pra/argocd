@@ -64,3 +64,6 @@ c6dad4d126de4a38cca35b19dc68a1d8d29f10a8        refs/heads/main
 # then argo app
 k apply -f john-project.yaml -n argocd
 kubectl apply -f john-app.yaml -n argocd
+
+# sync up
+kubectl -n argocd argo app sync john-app
