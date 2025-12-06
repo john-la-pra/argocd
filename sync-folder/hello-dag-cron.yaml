@@ -7,7 +7,7 @@ spec:
   schedule: "* * * * *"  # every minute
   concurrencyPolicy: "Allow"
   startingDeadlineSeconds: 5
-  successfulJobsHistoryLimit: 2
+  successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   workflowSpec:
     serviceAccountName: argo-workflow-sa
