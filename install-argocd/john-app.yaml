@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: john-app
+  namespace: argocd   # matches the namespace of the AppProject
+spec:
+  project: john-project
+  source:
+    repoURL: git@github.com:john-la-pra/argocd.git
+    targetRevision: HEAD
+    path: sync-folder
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

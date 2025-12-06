@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: john-project
+  namespace: argocd   # must match Argo CD controller namespace
+spec:
+  description: "Project for John's applications"
+  destinations:
+  - namespace: '*'               # allowed namespaces for apps
+    server: https://kubernetes.default.svc
+  sourceRepos:
+  - git@github.com:john-la-pra/argocd.git
+  clusterResourceWhitelist:
+  - group: '*'                   # optional
+    kind: '*'

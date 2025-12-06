@@ -1,0 +1,5 @@
+# Modify it to:
+
+args:
+  - server
+  - --auth-mode=server # add this line
