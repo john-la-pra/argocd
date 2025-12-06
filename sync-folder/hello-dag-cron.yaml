@@ -4,12 +4,13 @@ metadata:
   name: hello-dag-cron
   namespace: default
 spec:
-  schedule: "* * * * *"
+  schedule: "* * * * *"  # every minute
   concurrencyPolicy: "Allow"
-  startingDeadlineSeconds: 60
+  startingDeadlineSeconds: 5
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
   workflowSpec:
+    serviceAccountName: argo-workflow-sa
     entrypoint: hello-dag
     templates:
       - name: hello-dag
@@ -34,7 +35,7 @@ spec:
           args:
             - |
               echo "hello $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-              sleep 10
+              sleep 2
 
       - name: print-world
         container:
@@ -43,7 +44,7 @@ spec:
           args:
             - |
               echo "world $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-              sleep 10
+              sleep 2
 
       - name: print-goodbye
         container:
@@ -52,7 +53,7 @@ spec:
           args:
             - |
               echo "goodbye $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-              sleep 10
+              sleep 2
 
       - name: wait
         container:
