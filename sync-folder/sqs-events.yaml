@@ -4,10 +4,6 @@ metadata:
   name: sqs-es
   namespace: argocd
 spec:
-  service:
-    ports:
-      - port: 9300
-        targetPort: 9300
   sqs:
     myqueue:
       region: us-west-2
@@ -16,31 +12,19 @@ spec:
       jsonBody: true
       deleteMessage: true
       visibilityTimeoutSeconds: 30
----
-# Patch the EventSource deployment to include AWS credentials
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: sqs-es
-  namespace: argocd
-spec:
-  template:
-    spec:
-      containers:
-        - name: eventsource
-          env:
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: aws-sso-creds
-                  key: AWS_ACCESS_KEY_ID
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: aws-sso-creds
-                  key: AWS_SECRET_ACCESS_KEY
-            - name: AWS_SESSION_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: aws-sso-creds
-                  key: AWS_SESSION_TOKEN
+      env:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-sso-creds
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-sso-creds
+              key: AWS_SECRET_ACCESS_KEY
+        - name: AWS_SESSION_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: aws-sso-creds
+              key: AWS_SESSION_TOKEN
