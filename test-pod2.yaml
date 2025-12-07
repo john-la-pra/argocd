@@ -16,3 +16,4 @@ spec:
   - name: secret-aws-sso-creds
     secret:
       secretName: aws-sso-creds
+#
