@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: sqs-sensor
+  namespace: argocd
+spec:
+  dependencies:
+    - name: sqs-event
+      eventSourceName: aws-sqs
+      eventName: example
+
+  triggers:
+    - template:
+        name: run-hello
+        k8s:
+          group: ""
+          version: v1
+          resource: pods
+          operation: create
+          source:
+            resource:
+              apiVersion: v1
+              kind: Pod
+              metadata:
+                generateName: hello-from-sqs-
+                namespace: default
+              spec:
+                restartPolicy: Never
+                containers:
+                  - name: hello
+                    image: busybox
+                    command: ["/bin/sh", "-c"]
+                    args:
+                      - |
+                        echo "Hello from SQS!"
+                        echo "Message payload:"
+                        echo "Current time (Mountain Time): $(TZ=America/Denver date '+%Y-%m-%d %H:%M:%S %Z')"
+                        sleep 300
