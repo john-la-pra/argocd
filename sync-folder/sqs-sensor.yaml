@@ -1,15 +1,8 @@
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: sensor-sa
-  namespace: argocd
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: pod-creator
-  namespace: argocd  # allow pod creation in argocd namespace
+  namespace: argocd
 rules:
   - apiGroups: [""]
     resources: ["pods"]
@@ -22,48 +15,9 @@ metadata:
   namespace: argocd
 subjects:
   - kind: ServiceAccount
-    name: sensor-sa
+    name: default
     namespace: argocd
 roleRef:
   kind: Role
   name: pod-creator
   apiGroup: rbac.authorization.k8s.io
----
-apiVersion: argoproj.io/v1alpha1
-kind: Sensor
-metadata:
-  name: sqs-sensor
-  namespace: argocd
-spec:
-  serviceAccountName: sensor-sa
-  dependencies:
-    - name: example
-      eventSourceName: aws-sqs
-      eventName: example
-  triggers:
-    - template:
-        name: run-hello
-        k8s:
-          group: ""
-          version: v1
-          resource: pods
-          operation: create
-          source:
-            resource:
-              apiVersion: v1
-              kind: Pod
-              metadata:
-                generateName: hello-from-sqs-
-                namespace: argocd
-              spec:
-                restartPolicy: Never
-                containers:
-                  - name: hello
-                    image: busybox
-                    command: ["/bin/sh", "-c"]
-                    args:
-                      - |
-                        echo "Hello from SQS!"
-                        echo "Message payload:"
-                        echo "Current time (Mountain Time): $(TZ=America/Denver date '+%Y-%m-%d %H:%M:%S %Z')"
-                        sleep 300
