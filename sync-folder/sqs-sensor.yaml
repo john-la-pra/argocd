@@ -1,27 +1,33 @@
-# apiVersion: rbac.authorization.k8s.io/v1
-# kind: Role
-# metadata:
-#   name: pod-creator
-#   namespace: argocd
-# rules:
-#   - apiGroups: [""]
-#     resources: ["pods"]
-#     verbs: ["create", "get", "list", "watch"]
-# ---
-# apiVersion: rbac.authorization.k8s.io/v1
-# kind: RoleBinding
-# metadata:
-#   name: pod-creator-binding
-#   namespace: argocd
-# subjects:
-#   - kind: ServiceAccount
-#     name: default
-#     namespace: argocd
-# roleRef:
-#   kind: Role
-#   name: pod-creator
-#   apiGroup: rbac.authorization.k8s.io
-
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sensor-sa
+  namespace: argocd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sensor-pod-creator
+  namespace: argocd
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["create", "get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sensor-pod-creator-binding
+  namespace: argocd
+subjects:
+  - kind: ServiceAccount
+    name: sensor-sa
+    namespace: argocd
+roleRef:
+  kind: Role
+  name: sensor-pod-creator
+  apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
@@ -29,7 +35,7 @@ metadata:
   name: sqs-sensor
   namespace: argocd
 spec:
-  serviceAccountName: default
+  serviceAccountName: sensor-sa   # <- use the dedicated SA
   dependencies:
     - name: example
       eventSourceName: aws-sqs
