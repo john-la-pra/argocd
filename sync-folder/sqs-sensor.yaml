@@ -1,15 +1,49 @@
+---
+# ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sensor-sa
+  namespace: argocd
+---
+# RBAC Role in target namespace (default)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-creator
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["create", "get", "list", "watch"]
+---
+# RoleBinding for the SA
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-creator-binding
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: sensor-sa
+    namespace: argocd
+roleRef:
+  kind: Role
+  name: pod-creator
+  apiGroup: rbac.authorization.k8s.io
+---
+# Sensor
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
   name: sqs-sensor
   namespace: argocd
 spec:
-  serviceAccountName: sensor-sa
+  serviceAccountName: sensor-sa   # Sensor uses this SA
   dependencies:
     - name: example
       eventSourceName: aws-sqs
       eventName: example
-
   triggers:
     - template:
         name: run-hello
@@ -37,3 +71,14 @@ spec:
                         echo "Message payload:"
                         echo "Current time (Mountain Time): $(TZ=America/Denver date '+%Y-%m-%d %H:%M:%S %Z')"
                         sleep 300
+---
+# Optional: patch Deployment running Sensor (if ArgoCD manages it)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqs-sensor-sensor
+  namespace: argocd
+spec:
+  template:
+    spec:
+      serviceAccountName: sensor-sa
