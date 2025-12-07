@@ -71,14 +71,4 @@ spec:
                         echo "Message payload:"
                         echo "Current time (Mountain Time): $(TZ=America/Denver date '+%Y-%m-%d %H:%M:%S %Z')"
                         sleep 300
----
-# Optional: patch Deployment running Sensor (if ArgoCD manages it)
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: sqs-sensor-sensor
-  namespace: argocd
-spec:
-  template:
-    spec:
-      serviceAccountName: sensor-sa
+
