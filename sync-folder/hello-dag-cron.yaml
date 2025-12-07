@@ -4,7 +4,7 @@ metadata:
   name: hello-dag-cron
   namespace: default
 spec:
-  schedule: "* * * * *"  # every minute
+  schedule: "* 12 * * *"  # every minute
   concurrencyPolicy: "Allow"
   startingDeadlineSeconds: 5
   successfulJobsHistoryLimit: 1
