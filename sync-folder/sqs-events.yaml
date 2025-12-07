@@ -12,10 +12,10 @@ spec:
       waitTimeSeconds: 20
       # access/secret keys from secret
       accessKey:
-        key: accesskey
+        key: AWS_ACCESS_KEY_ID
         name: aws-sso-creds
       secretKey:
-        key: secretkey
+        key: AWS_SECRET_ACCESS_KEY
         name: aws-sso-creds
       # temporary session token via environment variable
       env:
