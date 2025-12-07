@@ -18,9 +18,6 @@ spec:
         key: AWS_SECRET_ACCESS_KEY
         name: aws-sso-creds
       # temporary session token via environment variable
-      env:
-        - name: AWS_SESSION_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: aws-sso-creds
-              key: AWS_SESSION_TOKEN
+      sessionToken:
+        name: aws-sso-creds
+        key: AWS_SESSION_TOKEN
