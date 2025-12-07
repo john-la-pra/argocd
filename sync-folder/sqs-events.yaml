@@ -4,39 +4,20 @@ metadata:
   name: aws-sqs
   namespace: argocd
 spec:
-  service:
-    ports:
-      - port: 7777
-        targetPort: 7777
   sqs:
     example:
+      region: us-west-2
       queue: dat-argo-wf-hello-pr-12-events
-      region: us-west-2  # or read from secret
-      accessKey:
-        name: aws-sso-creds
-        key: AWS_ACCESS_KEY_ID
-      secretKey:
-        name: aws-sso-creds
-        key: AWS_SECRET_ACCESS_KEY
-      sessionToken:
-        name: aws-sso-creds
-        key: AWS_SESSION_TOKEN
-      sqsPollingWaitTimeSeconds: 20
       jsonBody: true
-  template:
-    spec:
-      containers:
-        - name: main
-          image: quay.io/argoproj/argo-events:v1.9.6
-          args:
-            - eventsource
-            - --config
-            - /etc/eventsource/config
-          volumeMounts:
-            - name: secret-aws-sso-creds
-              mountPath: /argo-events/secrets/aws-sso-creds
-              readOnly: true
-      volumes:
-        - name: secret-aws-sso-creds
-          secret:
-            secretName: aws-sso-creds
+      waitTimeSeconds: 20
+      # access/secret keys from secret
+      accessKey:
+        key: AWS_ACCESS_KEY_ID
+        name: aws-sso-creds1
+      secretKey:
+        key: AWS_SECRET_ACCESS_KEY
+        name: aws-sso-creds1
+      # temporary session token via environment variable
+      sessionToken:
+        name: aws-sso-creds1
+        key: AWS_SESSION_TOKEN
