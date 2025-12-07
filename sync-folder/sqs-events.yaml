@@ -13,14 +13,14 @@ spec:
       # access/secret keys from secret
       accessKey:
         key: accesskey
-        name: aws-secret
+        name: aws-sso-creds
       secretKey:
         key: secretkey
-        name: aws-secret
+        name: aws-sso-creds
       # temporary session token via environment variable
       env:
         - name: AWS_SESSION_TOKEN
           valueFrom:
             secretKeyRef:
-              name: aws-secret
-              key: sessiontoken
+              name: aws-sso-creds
+              key: AWS_SESSION_TOKEN
