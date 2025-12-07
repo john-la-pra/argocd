@@ -34,6 +34,6 @@ spec:
                       args:
                         - |
                           echo "Hello from SQS-triggered Workflow!"
-                          echo "SQS payload delivered."
+                          echo "SQS payload delivered wait 10 s."
                           echo "Mountain Time: $(TZ=America/Denver date '+%Y-%m-%d %H:%M:%S %Z')"
                           sleep 10
