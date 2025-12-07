@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sensor-sa
+  namespace: argocd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sensor-wf-creator
+  namespace: argocd
+rules:
+  - apiGroups: ["argoproj.io"]
+    resources: ["workflows"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sensor-wf-creator-binding
+  namespace: argocd
+subjects:
+  - kind: ServiceAccount
+    name: sensor-sa
+    namespace: argocd
+roleRef:
+  kind: Role
+  name: sensor-wf-creator
+  apiGroup: rbac.authorization.k8s.io
