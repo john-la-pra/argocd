@@ -4,6 +4,7 @@ metadata:
   name: sqs-sensor
   namespace: argocd
 spec:
+  serviceAccountName: sensor-sa
   dependencies:
     - name: example
       eventSourceName: aws-sqs
