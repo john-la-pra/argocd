@@ -1,30 +1,26 @@
 apiVersion: argoproj.io/v1alpha1
 kind: EventSource
 metadata:
-  name: sqs-es
+  name: aws-sqs
   namespace: argocd
 spec:
   sqs:
-    myqueue:
+    example:
       region: us-west-2
-      queue: "https://sqs.us-west-2.amazonaws.com/654654598303/dat-argo-wf-hello-pr-12-events"
-      waitTimeSeconds: 5
+      queue: dat-argo-wf-hello-pr-12-events
       jsonBody: true
-      deleteMessage: true
-      visibilityTimeoutSeconds: 30
+      waitTimeSeconds: 20
+      # access/secret keys from secret
+      accessKey:
+        key: accesskey
+        name: aws-secret
+      secretKey:
+        key: secretkey
+        name: aws-secret
+      # temporary session token via environment variable
       env:
-        - name: AWS_ACCESS_KEY_ID
-          valueFrom:
-            secretKeyRef:
-              name: aws-sso-creds
-              key: AWS_ACCESS_KEY_ID
-        - name: AWS_SECRET_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: aws-sso-creds
-              key: AWS_SECRET_ACCESS_KEY
         - name: AWS_SESSION_TOKEN
           valueFrom:
             secretKeyRef:
-              name: aws-sso-creds
-              key: AWS_SESSION_TOKEN
+              name: aws-secret
+              key: sessiontoken
